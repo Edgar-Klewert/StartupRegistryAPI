@@ -17,10 +17,10 @@ export default function App(){
   const cityRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() =>{
-    loadCustormers();
+    loadCustomers();
   }, [])
 
-  async function loadCustormers(){
+  async function loadCustomers(){
     const response = await api.get("/customers")
     setCustomers(response.data);
   }
@@ -36,13 +36,22 @@ export default function App(){
     })
 
     console.log(response.data);
+    loadCustomers();
+  }
 
+  async function handleDelete(id: string){
+    try {
+      await api.delete(`/customer/${id}`);
+      setCustomers(customers.filter(customer => customer.id !== id));
+    } catch (error) {
+      console.error("Failed to delete customer:", error);
+    }
   }
 
   return (
     <div className="w-full min-h-screen bg-gray-900 flex justify-center px-4">
       <main className="my-10 w-full md:max-w-2xl">
-        <h1 className="text-4x1 font-medium text-white">Startup</h1>
+        <h1 className="text-4xl font-medium text-white">Startup</h1>
 
         <form className="flex flex-col my-6" onSubmit={handleSubmit}>
           <label className="font-medium text-white">Nome:</label>
@@ -61,25 +70,30 @@ export default function App(){
             ref={cityRef}
           />
 
-          <input type="submit"
-          value="Cadastrar" 
-          className="cursor-pointer w-full p-2 bg-teal-500 rounded font-medium" />
+          <input 
+            type="submit"
+            value="Cadastrar" 
+            className="cursor-pointer w-full p-2 bg-teal-500 rounded font-medium" 
+          />
         </form>
 
         <section className="flex flex-col gap-4">
+          {customers.map((customer) => (
+            <article
+              key={customer.id}
+              className="w-full bg-white rounded p-2 relative hover:scale-105 duration-200"
+            >
+              <p><span className="font-medium">Nome:</span> {customer.name}</p>
+              <p><span className="font-medium">Cidade:</span> {customer.city}</p>
+              <p><span className="font-medium">Status:</span> {customer.status ? "ATIVO" : "INATIVO"}</p>
 
-        {customers.map ( (customer) =>(
-          <article
-          key={customer.id}
-          className=" w-full bg-white rounded p-2 relative hover:scale-105 duration-200">
-          <p><span className="font-medium">Nome:</span>{customer.name} </p>
-          <p><span className="font-medium">Cidade:</span>{customer.city}</p>
-          <p><span className="font-medium">Status:</span>{customer.status ? "ATIVO" : "INATIVO"}</p>
-
-           <button className="bg-red-500 w-7 h-7 flex items-center justify-center rounded-lg absolute right-0 -top-2">
-            <FiTrash size={18} color="#FFF"/>
-           </button>
-          </article>
+              <button
+                onClick={() => handleDelete(customer.id)}
+                className="bg-red-500 w-7 h-7 flex items-center justify-center rounded-lg absolute right-0 -top-2"
+              >
+                <FiTrash size={18} color="#FFF"/>
+              </button>
+            </article>
           ))}
         </section>
       </main>

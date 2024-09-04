@@ -12,7 +12,7 @@ class CreateCustomerService{
       throw new Error("Preencha todos os campos")
     }
 
-    const customer = await prismaClient.customer.create({
+    const customer = await prismaClient.startup.create({
       data:{
         name,
         city,

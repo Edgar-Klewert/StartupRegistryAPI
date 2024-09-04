@@ -5,11 +5,11 @@ import { z } from 'zod';
 class DeleteCustomerController {
   async handle(request: FastifyRequest, reply: FastifyReply) {
     const querySchema = z.object({
-      id: z.string().uuid(),
+      id: z.string()
     });
 
     try {
-      const { id } = querySchema.parse(request.query);
+      const { id } = querySchema.parse(request.params);
 
       const customerService = new DeleteCustomerService();
       const customer = await customerService.execute({ id });
