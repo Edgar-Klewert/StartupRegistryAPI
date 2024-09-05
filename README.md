@@ -86,7 +86,12 @@ O backend segue uma arquitetura modular, separando a lógica de controle, valida
 4. Execute as migrações do Prisma para configurar o banco de dados:
 
     ```bash
-    pnpm prisma migrate deploy
+    pnpm prisma generate
+    ```
+5. Execute o backend com:
+
+    ```bash
+    pnpm dev
     ```
 
 ### Executando o Frontend
